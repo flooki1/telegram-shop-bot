@@ -1,50 +1,36 @@
-import os
-import asyncio
-from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
-from dotenv import load_dotenv
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-# بارگذاری فایل .env
-load_dotenv()
-
-# گرفتن توکن از Environment Variable
+# 🔑 توکن ربات (اینجا توکن خودتو بذار)
 TOKEN = "8402260828:AAHniaeZ_bfNyGe6HCZgHnn0qVPNkWWkaL4"
 
-if not TOKEN:
-    raise ValueError("❌ BOT_TOKEN در Environment Variable تنظیم نشده است!")
-
-# /start command
+# ✅ دستور /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [["🛍️ محصولات", "📞 ارتباط با ما"]]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-    await update.message.reply_text("سلام 👋\nخوش آمدید به فروشگاه ما 🛒", reply_markup=reply_markup)
+    await update.message.reply_text("سلام 👋 به فروشگاه خوش اومدی!")
 
-# پیام‌های منو
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text
+# ✅ دستور /help
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("لیست دستورات:\n/start - شروع\n/help - راهنما")
 
-    if text == "🛍️ محصولات":
-        categories = "دسته‌بندی محصولات:\n\n👕 پوشاک\n💻 الکترونیکی\n📚 کتاب"
-        await update.message.reply_text(categories)
+# ✅ پیام عادی (اکو)
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(f"شما گفتید: {update.message.text}")
 
-    elif text == "📞 ارتباط با ما":
-        await update.message.reply_text("فعلا اطلاعات تماس ثبت نشده است.")
-
-    else:
-        await update.message.reply_text("دستور نامعتبر ❌")
-
-# main bot
+# 📌 اجرای اصلی
 async def main():
     app = Application.builder().token(TOKEN).build()
 
+    # هندلرها
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
     print("🤖 Bot is running...")
     await app.run_polling()
 
 if __name__ == "__main__":
-    asyncio.run(main())
-
+    import asyncio
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())   # ✅ اینطوری توی Render بدون خطا میاد بالا
 
 
