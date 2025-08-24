@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # گرفتن توکن از Environment Variable
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = 8402260828:AAHniaeZ_bfNyGe6HCZgHnn0qVPNkWWkaL4
 
 if not TOKEN:
     raise ValueError("❌ BOT_TOKEN در Environment Variable تنظیم نشده است!")
@@ -45,4 +45,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
