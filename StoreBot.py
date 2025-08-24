@@ -16,8 +16,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"شما گفتید: {update.message.text}")
 
-# 📌 اجرای اصلی
-async def main():
+def main():
     app = Application.builder().token(TOKEN).build()
 
     # هندلرها
@@ -26,11 +25,7 @@ async def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
     print("🤖 Bot is running...")
-    await app.run_polling()
+    app.run_polling()   # 🚀 دیگه نیازی به asyncio نداری
 
 if __name__ == "__main__":
-    import asyncio
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())   # ✅ اینطوری توی Render بدون خطا میاد بالا
-
-
+    main()
